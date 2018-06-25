@@ -82,6 +82,13 @@ describe('<App/>',() => {
     expect([1,2,3]).toHaveLength(3)
   })
 
+  //.toBeCalledWith
+  it('函数的参数是数字',()=>{
+    const fn = jest.fn((a)=>a);
+    fn(1)
+    expect(fn).toBeCalledWith(expect.any(Number))
+  })
+
 })
 
 
@@ -105,3 +112,22 @@ expect.extend({
 test("expect方法扩展",()=>{
   expect(4).selfTestFn(2)
 })
+
+//expect.assertions() 验证调用一定数量的断言，在异步代码很有用，确保异步代码被调用了。 expect.hasAssertions()至少一个断言
+test('执行了两个断言，确保异步代码执行', () => {
+  expect.assertions(2);
+  function callback1(data) {
+    expect(data).toBeTruthy();
+  }
+  function callback2(data) {
+    expect(data).toBeTruthy();
+  }
+  return new Promise((resolve,rejest)=>{
+    setTimeout(()=>{
+      callback1(1);
+      callback2(2);
+      resolve()
+    },1000);
+  }) 
+});
+
